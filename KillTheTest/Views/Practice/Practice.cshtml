@@ -1,0 +1,204 @@
+﻿@model KillTheTest.Models.Practice
+@using KillTheTest.Helpers;
+
+<style type="text/css">
+    .Practicecontainer {
+        background-color: white;
+        border-radius: 10px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+        .answer {
+   text-decoration: underline;
+    }
+
+        .crossout {
+    text-decoration:line-through;
+}
+    .white, .white a {
+  color: lightgray;
+}
+  .glyphicon { cursor: pointer; cursor: hand; }
+
+    .hintHighlight {
+        font-weight:bold;
+        color:darkred;
+    }
+    
+</style>
+
+
+@if (User.IsInRole("Administrator"))
+{
+    <a href="~/Practices/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.PracticeId/Edit">[Edit]</a>
+}
+
+<br />
+
+
+<div class="row">
+    <div class="col-md-11 col-xs-10">
+        @Html.Raw(Helpers.ConvertHtml(@Model.PracticeQuestionFormatted))
+        <br /><br />
+    </div>
+</div>
+<br />
+
+<div class="radio" >
+    <label id="choiceALabel">
+        <input type="radio" name="choice" id="choiceA"
+               value="@Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceA))">
+        @Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceA))
+    </label>
+    <span class="glyphicon glyphicon-remove" id="removeA" aria-hidden="true"></span>
+</div>
+
+<div class="radio">
+    <label id="choiceBLabel">
+        <input type="radio" name="choice" id="choiceB"
+               value="@Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceB))">
+        @Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceB))       
+    </label>
+    <span class="glyphicon glyphicon-remove" id="removeB" aria-hidden="true"></span>
+</div>
+<div class="radio">
+    <label id="choiceCLabel">
+        <input type="radio" name="choice" id="choiceC"
+               value="@Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceC))">
+        @Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceC))
+          
+    </label>
+    <span class="glyphicon glyphicon-remove" id="removeC" aria-hidden="true"></span>
+</div>
+<div class="radio">
+    <label id="choiceDLabel">
+        <input type="radio" name="choice" id="choiceD"
+               value="@Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceD))">
+        @Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceD))
+            
+    </label>
+    <span class="glyphicon glyphicon-remove" id="removeD" aria-hidden="true"></span>
+</div>
+<div class="radio">
+    <label id="choiceELabel">
+        <input type="radio" name="choice" id="choiceE"
+               value="@Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceE))">
+        @Html.Raw(Helpers.ConvertHtml(@Model.PracticeChoiceE))
+             
+    </label>
+    <span class="glyphicon glyphicon-remove" id="removeE" aria-hidden="true"></span>
+</div>
+
+<br />
+<button class="btn btn-default" type="button" id="CheckItButton">Check it!</button>
+
+<br />
+<div id="PracticeHint" class="bs-callout bs-callout-danger hidden" role="alert"><span class="label label-danger" display:inline-block>@Helpers.Criticism()</span><br /><br />@Helpers.ConvertHtml(@Model.PracticeHint)</div>
+<div id="PracticeExplanation" class="bs-callout bs-callout-success hidden" role="alert"><span class="label label-success" display:inline-block>@Helpers.Compliment()</span><br /><br /> @Helpers.ConvertHtml(@Model.PracticeExplanation)</div>
+
+
+<br />
+
+
+<script>
+    $(document).ready(function () {
+        $("#CheckItButton").click(function () { CheckAnswer(); });
+
+        $("#CheckItText").keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                CheckAnswer();
+            }
+        });
+
+
+        $('#answer').html("@Html.Raw(Helpers.ConvertHtml(Model.PracticeChoiceA))");
+
+      
+        $("input[type='radio']").click(function () {
+            $('#answer').html($(this).val());
+        });
+
+        $("[id^=remove]").click(function () {
+
+            var letter = this.id.substr(6, 1);
+            if ($("#choice" + letter + "Label").hasClass('crossout') == true) {
+                $("#choice" + letter + "Label").removeClass("crossout");
+                document.getElementById("choice" + letter).disabled = false;
+                $(this).removeClass("white");
+                event.preventDefault();
+            }
+            else {
+                $("#choice" + letter + "Label").addClass("crossout");
+                document.getElementById("choice" + letter).disabled = true;
+                document.getElementById("choice" + letter).checked = false;
+                $(this).addClass("white");
+                //$(this).addClass("glyphicon-remove");
+                //$(this).addClass("glyphicon-thumbs-up");
+            }
+        });
+
+        $("nextButton > a").on("click", function (event) {
+            if ($("#nextButton").hasClass('disabled') != undefined) {
+                event.preventDefault();
+            }
+        });
+
+
+        function ResultMessage(x) {
+            if (x == 1) {
+
+                $("#PracticeHint").addClass("hidden");
+                $("#PracticeExplanation").removeClass("hidden");
+                $("#nextButton").removeClass("hidden");
+
+
+                $.ajax({
+                    url: '/Practices/Practice/UserComplete/@Model.PracticeId',
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    data: { id: "@Model.PracticeId" }
+                    //success: function (data) { // This function is executed when this request is succeed.
+                    //    alert(data);
+                    //},
+                    //error: function (data) {
+                    //    alert("Error:");   // This function is executed when error occurred.
+                    //}
+                });
+
+
+            }
+            else {
+
+                $("#PracticeExplanation").addClass("hidden");
+                $("#PracticeHint").removeClass("hidden");
+                $("#nextButton").addClass("hidden");
+                $(".hint").addClass('hintHighlight');
+            }
+        }
+
+
+        function CheckAnswer() {
+            //TODO: Stop stripping out spaces - store correctly in DB - This will cause a problem at some point
+            var rightAnswer = "@Model.PracticeAnswer";
+            //alert(rightAnswer + ':' + answer);
+
+            var answer = $('input[type=radio]:checked').attr('id').substr(6, 1);
+
+            //alert(rightAnswer + ':' + answer);
+
+            if (rightAnswer == answer) {
+                ResultMessage(1)
+            }
+            else {
+                ResultMessage(0)
+            }
+        }
+
+    });
+
+
+</script>
+

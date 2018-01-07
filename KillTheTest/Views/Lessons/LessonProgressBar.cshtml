@@ -1,0 +1,51 @@
+﻿@model KillTheTest.Models.Lesson
+@using KillTheTest.Helpers;
+@*<br />*@
+
+
+<div class="progress">
+    <div id="progress-bar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@Model.PercentComplete" aria-valuemin="0" aria-valuemax="100" style="width: @Model.PercentComplete%;">
+        @Model.PercentComplete%
+    </div>
+</div>
+@*<ul class="pager">
+    @if (Model.PreviousLesson() == null)
+    {
+        <li class="previous hidden"><a href="#">&larr; Previous</a></li>
+    }
+    else
+    {
+        <li class="previous"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.PreviousLesson().LessonUrl">&larr; Previous</a></li>
+    }
+
+
+    @if (Model.NextLesson() == null)
+    {
+        <li class="next disabled"><a href="#">Next &rarr;</a></li>
+        <li class="next" id="nextButton"><a href="~/Objective/Complete/@Model.ObjectiveId" id="nextLink">Summary &rarr;</a></li>
+
+    }
+    else
+    {
+        
+        <li class="next hidden" id="nextButton"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.NextLesson().LessonUrl" id="nextLink">Next &rarr;</a></li>
+        <li class="next" id="nextButton"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.NextLesson().LessonUrl" id="nextLink">@Model.NextLesson().LessonName &rarr;</a></li>
+    }
+   </ul>*@
+
+    <p class="text-right">
+    @if (Model.NextLesson() == null)
+    {
+        <a id="nextButton2" href="/Lessons/Objective/@Model.ObjectiveId/Complete" class=" btn btn-primary disabled" role="button">Summary</a>
+    }
+    else
+    {
+    @*<a id="nextButton2" href="/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.NextLesson().LessonUrl" class="btn btn-primary disabled" role="button">Next</a>*@
+    @*<a id="nextButton2" href="/Lessons/Student/@Model.NextLesson().LessonUrl" class="btn btn-primary disabled" role="button">Next</a>*@
+    <a id="nextButton2" href="/Lessons/Lesson/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.NextLesson().LessonUrl" class="btn btn-primary disabled" role="button">Next</a>
+
+    }
+    </p>
+
+
+

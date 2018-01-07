@@ -1,0 +1,239 @@
+﻿@model KillTheTest.Models.Lesson
+@using KillTheTest.Helpers;
+    
+
+    @{
+        ViewBag.Title = Model.ObjectiveName + " - " + Model.LessonName;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        
+    }
+
+    <div class="page-header">
+        <h1>@Model.ObjectiveName</h1>
+        <h4 class="lessonDescription"><em>@Model.LessonName</em></h4>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            @if (User.IsInRole("Administrator"))
+            {
+                <a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.LessonId/Edit">[Edit]</a>
+            }
+
+            @Html.Raw(Helpers.ConvertHtml(@Model.LessonTextFormatted))
+            <br /><br />
+            @*<div class="bs-callout bs-callout-info">
+                    @if (Model.LessonType == 2)
+                    {
+                        <small>Click a word</small>
+                    }
+                    @Html.Raw(@Model.LessonFocusSentence)
+                </div>*@
+
+            <div class="panel panel-info">
+                @if (Model.LessonType == 2)
+                {
+                    <div class="panel-heading">
+                        Click a word or phrase
+                    </div>
+                }
+
+                <div class="panel-body">
+                    <strong>@Html.Raw(Helpers.ConvertHtml((Model.LessonFocusSentence)))</strong>
+                    
+                    </div>
+            </div>
+
+            @*<h3>Try it.</h3>*@
+            <img src="~/Content/images/Badge2.png" height="50px" width="50px"/>
+            <br />
+            @Html.Raw(Helpers.ConvertHtml(@Model.LessonQuestionFormatted))
+
+
+            <br /><br />
+
+            @if (Model.LessonType == 1)
+            {
+
+                <div class="input-group" style="width:300px">
+                    <input type="text" class="form-control" id="CheckItText">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="CheckItButton">Check it!</button>
+                    </span>
+                </div><!-- /input-group -->
+
+            }
+
+            <br />
+
+            <div id="LessonHint" class="bs-callout bs-callout-danger hidden" role="alert"><span class="label label-danger">@Helpers.Criticism()</span><br /><br />@Helpers.ConvertHtml(@Model.LessonHint)</div>
+            <div id="LessonExplanation" class="bs-callout bs-callout-success hidden" role="alert"><span class="label label-success">@Helpers.Compliment()</span><br /><br /> @Helpers.ConvertHtml(@Model.LessonExplanation)</div>
+
+
+            @*<div id="LessonHint" class="alert alert-warning hidden" role="alert">@Model.LessonHint</div>
+                <div id="LessonExplanation" class="alert alert-success hidden" role="alert">@Model.LessonExplanation</div>*@
+
+
+            @*<p id="LessonHint"><span class="label label-danger">Hint</span> @Model.LessonHint</p>
+                <p id="LessonExplanation"><span class="label label-success">Success</span> @Model.LessonExplanation</p>*@
+
+
+
+
+            <br />
+
+            <ul class="pager">
+                @if (Model.PreviousLesson() == null)
+                {
+                    <li class="previous disabled"><a href="#">&larr; Previous</a></li>
+                }
+                else
+                {
+                    @*<li class="previous"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.PreviousLesson().LessonUrl">&larr; @Model.PreviousLesson().LessonName</a></li>*@
+                    <li class="previous"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.PreviousLesson().LessonUrl">&larr; Previous</a></li>
+                }
+
+                @if (Model.NextLesson() == null)
+                {
+                    @*<li class="next disabled"><a href="#">Next &rarr;</a></li>*@
+                    <li class="next" id="nextButton"><a href="~/Objective/Complete/@Model.ObjectiveId" id="nextLink">Summary &rarr;</a></li>
+
+                }
+                else
+                {
+                    <li class="next" id="nextButton"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.NextLesson().LessonUrl" id="nextLink">Next &rarr;</a></li>
+                    @*<li class="next" id="nextButton"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.NextLesson().LessonUrl" id="nextLink">@Model.NextLesson().LessonName &rarr;</a></li>*@
+                }
+            </ul>
+
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@Model.PercentComplete" aria-valuemin="0" aria-valuemax="100" style="width: @Model.PercentComplete%;">
+                    @Model.PercentComplete%
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-4 .hidden-xs .hidden-sm">
+
+
+            <ul class="nav nav-pills nav-stacked lessonNav">
+                @foreach (KillTheTest.Models.Lesson l in Model.LessonsInObjective)
+                {
+                    if (l.LessonId == Model.LessonId)
+                    {
+                        <li class="disabled" title="@l.LessonDescription">
+                            <a href="#">
+                                @l.LessonName
+                                @if (l.UserCompleted)
+                                {
+                                    <span class="glyphicon glyphicon-ok" />
+                                }
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li title="@l.LessonDescription">
+                            <a href="/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl">
+                                @l.LessonName
+
+                                @if (l.UserCompleted)
+                                {
+                                    <span class="glyphicon glyphicon-ok" />
+                                }
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+            @*@foreach (KillTheTest.Models.Lesson l in Model.LessonsInObjective)
+                {
+                    <ul>
+                        <li>
+                            <a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl">@l.LessonName</a>
+                        </li>
+                    </ul>
+                }*@
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#CheckItButton").click(function () { CheckAnswer(); });
+
+            $("#CheckItText").keypress(function (e) {
+                var key = e.which;
+                if (key == 13)  // the enter key code
+                {
+                    CheckAnswer();
+                }
+            });
+
+
+            $("span.wrongClick").click(function () {
+                ResultMessage(0);
+            });
+
+            $("span.rightClick").click(function () {
+                ResultMessage(1);
+            });
+
+
+            $("nextButton > a").on("click", function (event) {
+                if ($("#nextButton").hasClass('disabled') != undefined) {
+                    event.preventDefault();
+                }
+            });
+
+
+            function ResultMessage(x) {
+                if (x == 1) {
+
+                    $("#LessonHint").addClass("hidden");
+                    $("#LessonExplanation").removeClass("hidden");
+                    $("#nextButton").removeClass("hidden");
+
+                    $.ajax({
+                        url: '/Lessons/Lesson/UserComplete/@Model.LessonId',
+                        type: 'GET',
+                        contentType: 'application/json; charset=utf-8',
+                        data: { id: "@Model.LessonId" }
+                        //success: function (data) { // This function is executed when this request is succeed.
+                        //    alert(data);
+                        //},
+                        //error: function (data) {
+                        //    alert("Error:");   // This function is executed when error occurred.
+                        //}
+                    });
+
+
+                }
+                else {
+
+                    $("#LessonExplanation").addClass("hidden");
+                    $("#LessonHint").removeClass("hidden");
+                    $("#nextButton").addClass("hidden");
+                }
+            }
+
+
+            function CheckAnswer() {
+                //TODO: Stop stripping out spaces - store correctly in DB - This will cause a problem at some point
+                var answers = "@Model.LessonAnswer".toUpperCase().replace(/ /g, "").split(",");
+                var answer = $("#CheckItText").val().toUpperCase().replace(/ /g, "");
+
+                //window.alert(answers[0] + ':' + answer);
+
+                if (answers.indexOf(answer) !== -1) {
+                    ResultMessage(1)
+                }
+                else {
+                    ResultMessage(0)
+                }
+            }
+
+        });
+
+
+    </script>
+

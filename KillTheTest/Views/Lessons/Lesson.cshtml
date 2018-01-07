@@ -1,0 +1,168 @@
+﻿@model KillTheTest.Models.Lesson
+@using KillTheTest.Helpers;
+
+<style type="text/css">
+    .lessoncontainer {
+        background-color: white;
+        border-radius: 10px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+</style>
+
+
+@if (User.IsInRole("Administrator"))
+{
+    <a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.LessonId/Edit">[Edit]</a>
+}
+
+@Html.Raw(Helpers.ConvertHtml(@Model.LessonTextFormatted))
+<br /><br />
+@*<div class="bs-callout bs-callout-info">
+        @if (Model.LessonType == 2)
+        {
+            <small>Click a word</small>
+        }
+        @Html.Raw(@Model.LessonFocusSentence)
+    </div>*@
+
+<div class="panel panel-info">
+    @if (Model.LessonType == 2)
+    {
+        <div class="panel-heading">
+            Click a word or phrase
+        </div>
+    }
+
+    <div class="panel-body">
+        <strong>@Html.Raw(Helpers.ConvertHtml((Model.LessonFocusSentence)))</strong>
+    </div>
+</div>
+
+
+@*<h3>Challenge</h3>*@
+@*<img src="~/Content/images/Badge2.png" height="50px" width="50px" />
+    <br />*@
+<br />
+<div class="row">
+    <div class="col-md-1 col-xs-2">
+        <img src="~/Content/images/pencil.png" >
+        <br />
+    </div>
+    <div class="col-md-11 col-xs-10">
+        @Html.Raw(Helpers.ConvertHtml(@Model.LessonQuestionFormatted))
+        <br /><br />
+        @if (Model.LessonType == 1)
+        {
+
+            <div class="input-group">
+                <input type="text" class="form-control" id="CheckItText">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="CheckItButton">Check it!</button>
+                </span>
+            </div><!-- /input-group -->
+
+        }
+    </div>
+</div>
+<br />
+
+<div id="LessonHint" class="bs-callout bs-callout-danger hidden" role="alert"><span class="label label-danger" display:inline-block>@Helpers.Criticism()</span><br /><br />@Helpers.ConvertHtml(@Model.LessonHint)</div>
+<div id="LessonExplanation" class="bs-callout bs-callout-success hidden" role="alert"><span class="label label-success" display:inline-block>@Helpers.Compliment()</span><br /><br /> @Helpers.ConvertHtml(@Model.LessonExplanation)</div>
+
+
+@*<div id="LessonHint" class="alert alert-warning hidden" role="alert">@Model.LessonHint</div>
+    <div id="LessonExplanation" class="alert alert-success hidden" role="alert">@Model.LessonExplanation</div>*@
+
+
+@*<p id="LessonHint"><span class="label label-danger">Hint</span> @Model.LessonHint</p>
+    <p id="LessonExplanation"><span class="label label-success">Success</span> @Model.LessonExplanation</p>*@
+
+<br />
+
+
+<script>
+    $(document).ready(function () {
+        $("#CheckItButton").click(function () { CheckAnswer(); });
+
+        $("#CheckItText").keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                CheckAnswer();
+            }
+        });
+
+
+        $("span.wrongClick").click(function () {
+            ResultMessage(0);
+        });
+
+        $("span.rightClick").click(function () {
+            ResultMessage(1);
+        });
+
+
+        $("nextButton > a").on("click", function (event) {
+            if ($("#nextButton").hasClass('disabled') != undefined) {
+                event.preventDefault();
+            }
+        });
+
+
+        function ResultMessage(x) {
+            if (x == 1) {
+
+                $("#LessonHint").addClass("hidden");
+                $("#LessonExplanation").removeClass("hidden");
+                $("#nextButton").removeClass("hidden");
+
+                $('.progress-bar').css('width', @Model.SuccessPercentComplete +'%').attr('aria-valuenow', '@Model.SuccessPercentComplete');
+                $('.progress-bar').text('@Model.SuccessPercentComplete' + '%');
+
+                $("#nextButton2").removeClass("disabled");
+
+                $.ajax({
+                    url: '/Lessons/Lesson/UserComplete/@Model.LessonId',
+                    type: 'GET',
+                    contentType: 'application/json; charset=utf-8',
+                    data: { id: "@Model.LessonId" }
+                    //success: function (data) { // This function is executed when this request is succeed.
+                    //    alert(data);
+                    //},
+                    //error: function (data) {
+                    //    alert("Error:");   // This function is executed when error occurred.
+                    //}
+                });
+
+
+            }
+            else {
+
+                $("#LessonExplanation").addClass("hidden");
+                $("#LessonHint").removeClass("hidden");
+                $("#nextButton").addClass("hidden");
+            }
+        }
+
+
+        function CheckAnswer() {
+            //TODO: Stop stripping out spaces - store correctly in DB - This will cause a problem at some point
+            var answers = "@Model.LessonAnswer".toUpperCase().replace(/ /g, "").split(",");
+            var answer = $("#CheckItText").val().toUpperCase().replace(/ /g, "");
+
+            //window.alert(answers[0] + ':' + answer);
+
+            if (answers.indexOf(answer) !== -1) {
+                ResultMessage(1)
+            }
+            else {
+                ResultMessage(0)
+            }
+        }
+
+    });
+
+
+</script>
+

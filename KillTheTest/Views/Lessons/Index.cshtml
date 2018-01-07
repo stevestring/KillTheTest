@@ -1,0 +1,72 @@
+﻿@model KillTheTest.Models.Sections
+
+@{
+    ViewBag.Title = "Lessons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+
+@@media (min-width: 768px){
+.bs-glyphicons li {
+width: 12.5%;
+font-size: 12px;
+    }
+}
+
+</style>
+<div class="page-header">
+    <h1>Lessons</h1>
+    </div>
+
+    @foreach (KillTheTest.Models.Section s in Model.Values)
+    {
+        <ul class="list-unstyled">
+            <li>
+                @*<h2>
+                    @s.SectionName
+                </h2>*@
+                @foreach (KillTheTest.Models.Unit u in s.Units.Values)
+                {    
+                    <h2>
+                    @u.UnitName
+                </h2>          
+                    <div class="bs-glyphicons">
+                    <ul class="bs-glyphicons-list">
+                        @foreach (KillTheTest.Models.SubTopic st in u.SubTopics.Values)
+                        {
+                            foreach (KillTheTest.Models.Objective o in st.Objectives.Values)
+                            {
+                                if (o.Lessons.Count > 0)
+                                {
+
+            
+                                        <a title ="@o.ObjectiveDescription" href="/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveUrl/@o.Lessons.First().Value.LessonUrl">
+                                            
+
+                                                <li>
+                                                    @if (o.Completed && User.Identity.Name!="")
+                                                {
+                                                        <span class="glyphicon glyphicon-ok"></span>
+                                                }
+                                                else
+                                                {
+                                                        <span class="glyphicon glyphicon-book"></span>
+                                                }
+
+                                                    <span class="glyphicon-class">@o.ObjectiveName</span>
+                                                </li>
+                                        </a>
+
+                                }
+
+                            }
+
+                        }
+                    </ul>
+                </div>
+                }
+
+            </li>
+        </ul>
+
+    }

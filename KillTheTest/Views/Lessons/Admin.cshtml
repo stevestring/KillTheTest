@@ -1,0 +1,74 @@
+﻿@model KillTheTest.Models.Sections
+
+@{
+    ViewBag.Title = "Lessons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Lessons</h1>
+
+@foreach (KillTheTest.Models.Section s in Model.Values)
+{
+    <ul>
+        <li>
+            <h2>
+                <a href="~/Lessons/@s.SectionUrl/@s.SectionId">@s.SectionName</a>
+            </h2>
+                @foreach (KillTheTest.Models.Unit u in s.Units.Values)
+                {
+                    <ul>
+                        <li>
+                            <h3>
+                                <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@u.UnitId">@u.UnitName</a>
+                            </h3>
+                            @foreach (KillTheTest.Models.SubTopic st in u.SubTopics.Values)
+                            {
+                                <ul>
+                                    <li>
+                                        <h4>
+                                            <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@st.SubTopicId">@st.SubTopicName</a>
+                                            <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@st.SubTopicId/Create">[Add Objective]</a>
+</h4>
+                                        <ul>
+    @foreach (KillTheTest.Models.Objective o in st.Objectives.Values)
+    {
+
+        <li>
+            <h5>
+                <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveId">@o.ObjectiveName</a>
+                <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveId/Edit">[Edit]</a>
+                <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveId/Create">[Add Lesson]</a>
+                
+</h5>
+            <ul>
+                @foreach (KillTheTest.Models.Lesson l in o.Lessons.Values)
+                {
+
+                    <li>
+                        <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveUrl/@l.LessonId">@l.LessonName</a>
+                        <a href="~/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveUrl/@l.LessonId/Edit">[Edit]</a>
+                    </li>
+
+                }
+            </ul>
+        </li>
+
+    }
+</ul>
+
+                                    </li>
+                                </ul>
+                            }
+                        </li>
+                    </ul>
+                }            
+        </li>
+    </ul>
+
+}
+
+@*<ul>
+        <li>
+            <a href="~/Lessons/@o.SectionUrl/@o.UnitUrl/@o.SubTopicUrl/@o.ObjectiveId">@o.ObjectiveName</a>
+        </li>
+    </ul>*@

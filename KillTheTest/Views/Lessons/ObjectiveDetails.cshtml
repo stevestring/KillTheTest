@@ -1,0 +1,32 @@
+﻿@model KillTheTest.Models.Objective
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="breadcrumb">
+    <li><a href="#">@Model.SectionName</a> <span class="divider"/></li>
+    <li><a href="#">@Model.UnitName</a> <span class="divider" /></li>
+    <li><a href="#">@Model.SubTopicName</a> <span class="divider" /></li>
+    <li class="active">@Model.ObjectiveName</li>
+</ul>
+
+<h1>@Model.SubTopicName > @Model.ObjectiveName</h1>
+
+<div>
+    <hr />
+    @Html.Raw(@Model.ObjectiveDescription)
+    <br /><br />
+</div>
+
+<h3>Lessons</h3>
+
+@foreach (KillTheTest.Models.Lesson l in Model.Lessons.Values)
+{
+    <ul>
+        <li>
+            <a href="~/Lessons/Lesson/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl/Teacher" title=@l.LessonDescription>@l.LessonName</a>
+        </li>
+    </ul>
+}

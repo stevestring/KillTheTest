@@ -1,0 +1,41 @@
+﻿@model KillTheTest.Models.Objective
+
+@{
+    ViewBag.Title = Model.ObjectiveName + " Complete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1>Congratulations!</h1>
+You have successfully completed <strong>@Model.ObjectiveName</strong>
+<br />
+You are well on your way to killing the test...  Keep it up!
+<h2>Topics Learned</h2> 
+@foreach (KillTheTest.Models.Lesson l in Model.Lessons.Values)
+{
+    <ul>
+        <li title="@l.LessonDescription">
+            <a href="/Lessons/Lesson/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl">
+                @l.LessonName
+                <span class="glyphicon glyphicon-ok" />
+            </a>
+
+        </li>
+    </ul>
+}
+<br />
+
+@*<a href="~/Lessons/{section}/{unit}/{subtopic}/@Model.NextObjective.ObjectiveId" class="btn btn-primary btn-lg active" role="button">Proceed to @Model.NextObjective.ObjectiveName</a>*@
+<a href="~/Lessons/Section/@Model.SectionUrl" class="btn btn-default btn-lg active" role="button">Back to lessons</a>
+
+<hr />
+@*<ul class="pager">
+     <li class="previous"><a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@Model.Lessons.Values.LastOrDefault().LessonUrl">&larr; Previous</a></li>
+     <li class="next disabled"><a href="#">Next &rarr;</a></li>
+
+</ul>*@
+
+<div class="progress">
+    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+        100%
+    </div>
+</div>
+

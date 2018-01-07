@@ -1,0 +1,82 @@
+﻿@model KillTheTest.Models.Sections
+
+@{
+    ViewBag.Title = "Lessons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+
+/*@@media (min-width: 768px){
+.bs-glyphicons li {
+width: 12.5%;
+font-size: 12px;
+    }
+}*/
+
+</style>
+<div class="page-header">
+    <h1>Lessons</h1>
+    </div>
+
+    @foreach (KillTheTest.Models.Section s in Model.Values)
+    {
+        <ul class="list-unstyled">
+            <li>
+                <h2>
+                    @s.SectionName
+                </h2>
+                @foreach (KillTheTest.Models.Unit u in s.Units.Values)
+                {    
+                    <h3>
+                    @u.UnitName
+                </h3>
+
+    <ul class="list-unstyled">
+        @foreach (KillTheTest.Models.SubTopic st in u.SubTopics.Values)
+        {
+            if (st.Objectives.Count > 0)
+            {
+                foreach (KillTheTest.Models.Objective o in st.Objectives.Values)
+                {
+                    <li>
+                        <a title="@o.ObjectiveDescription" href="/Lessons/Objective/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveId">
+                            <span class="glyphicon glyphicon-book"></span> @o.ObjectiveName
+                        </a>
+                        @*<a title="All Lessons" href="/Teacher/Lessons/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveId">
+                                @*<span class="glyphicon glyphicon-print"></span>
+                                [All Lessons]
+                            </a>*@
+
+                        <ul class="list-unstyled" style="padding-left:20px;">
+                            @foreach (KillTheTest.Models.Lesson l in o.Lessons.Values)
+                            {
+                                <li>
+                                    <a title="@l.LessonDescription" href="/Lessons/Lesson/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveUrl/@l.LessonUrl/Teacher">
+                                        @*<span class="glyphicon glyphicon-list-alt">@l.LessonName</span>*@ @l.LessonName
+                                        @*<span class="glyphicon glyphicon-list-alt">@l.LessonName</span>*@
+                                    </a>
+                                </li>
+
+                            }
+
+                            <li>
+                                <a title="All Lessons" href="/Lessons/Objective/@s.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveId/Handout">
+                                    <span class="glyphicon glyphicon-print"></span> Handout
+                                </a>
+                            </li>
+
+                        </ul>
+
+
+                    </li>
+                }
+            }
+
+        }
+    </ul>
+                }
+
+            </li>
+        </ul>
+
+    }

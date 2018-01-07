@@ -1,0 +1,91 @@
+﻿@model KillTheTest.Models.Section
+
+@{
+    ViewBag.Title = "Lessons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+
+@@media (min-width: 768px){
+.bs-glyphicons li {
+width: 12.5%;
+font-size: 12px;
+    }
+}
+
+</style>
+@*<div class="page-header">
+    <h1>@Model.SectionName</h1>
+    </div>*@
+
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        
+        @if (Model.SectionUrl.ToUpper() == "Writing".ToUpper())
+        {
+            <li class="active"><a href="/Lessons/Writing"><h2>Writing</h2></a></li>
+        }
+        else
+        {
+            <li><a href="/Lessons/Writing"><h2>Writing</h2></a></li>
+        }
+        @if (Model.SectionUrl.ToUpper() == "Reading".ToUpper())
+        {
+            <li class="active"><a href="/Lessons/Reading"><h2>Reading</h2></a></li>
+        }
+        else
+        {
+            <li><a href="/Lessons/Reading"><h2>Reading</h2></a></li>
+        }
+        @if (Model.SectionUrl.ToUpper() == "Math1".ToUpper())
+        {
+            <li class="active"><a href="/Lessons/Math"><h2>Math</h2></a></li>
+        }
+        else
+        {
+            <li><a href="/Lessons/Math"><h2>Math</h2></a></li>
+        }
+
+    </ul>
+
+    @foreach (KillTheTest.Models.Unit u in Model.Units.Values)
+    {
+        <h3>@u.UnitName</h3>
+            @u.UnitDescription  
+       
+        <div class="bs-glyphicons">
+            <ul class="bs-glyphicons-list">
+                @foreach (KillTheTest.Models.SubTopic st in u.SubTopics.Values)
+                {
+                    foreach (KillTheTest.Models.Objective o in st.Objectives.Values)
+                    {
+                        if (o.Lessons.Count > 0)
+                        {
+
+
+                            @*<a title="@o.ObjectiveDescription" href="~/Lessons/@Model.SectionUrl/@u.UnitUrl/@st.SubTopicUrl/@o.ObjectiveUrl/@o.Lessons.First().Value.LessonUrl">*@
+                     <a title="@o.ObjectiveDescription" href="~/Lessons/Student/@o.Lessons.First().Value.LessonUrl">
+          
+                      <li>
+                                    @if (o.Completed && User.Identity.Name != "")
+                                    {
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon-book"></span>
+                                    }
+
+                                    <span class="glyphicon-class">@o.ObjectiveName</span>
+                                </li>
+                            </a>
+
+                        }
+
+                    }
+
+                }
+            </ul>
+        </div>
+
+
+    }

@@ -1,0 +1,29 @@
+﻿@model KillTheTest.Models.Objective
+@using KillTheTest.Helpers;
+
+
+@{
+    ViewBag.Title = Model.ObjectiveName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+@*<div class="col-md-12 lessoncontainer">*@
+
+
+    @foreach (KillTheTest.Models.Lesson l in Model.Lessons.Values)
+    {
+        <div class="col-md-8" style="page-break-inside: avoid;">
+            <div class="page-header">
+                <h1>@Html.Raw(Helpers.ConvertHtml(l.LessonName))</h1>
+            </div>
+
+            @Html.Partial("~/Views/Lessons/Lesson.cshtml", l)
+            <hr />
+        </div>
+
+
+    }
+            @*</div>*@
+

@@ -1,0 +1,46 @@
+﻿@model KillTheTest.Models.Lesson
+@using KillTheTest.Helpers;
+
+
+    <ul class="nav nav-pills nav-stacked lessonNav">
+        @foreach (KillTheTest.Models.Lesson l in Model.LessonsInObjective)
+        {
+            if (l.LessonId == Model.LessonId)
+            {
+                <li class="disabled" title="@l.LessonDescription">
+                    <a href="#">
+                        @l.LessonName
+                        @*@if (l.UserCompleted)
+                        {
+                            <span class="glyphicon glyphicon-ok" />
+                        }*@
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li title="@l.LessonDescription">
+                    @*<a href="/Lessons/Teacher/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl">*@
+                    @*<a href="/Lessons/Teacher/@l.LessonUrl">*@
+
+                        <a href="/Lessons/Lesson/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl/Teacher">
+                           @l.LessonName
+                           @*@if (l.usercompleted)
+                           {
+                            <span class="glyphicon glyphicon-ok" />
+                            }*@
+                        </a>
+                </li>
+            }
+        }
+    </ul>
+    @*@foreach (KillTheTest.Models.Lesson l in Model.LessonsInObjective)
+        {
+            <ul>
+                <li>
+                    <a href="~/Lessons/@Model.SectionUrl/@Model.UnitUrl/@Model.SubTopicUrl/@Model.ObjectiveUrl/@l.LessonUrl">@l.LessonName</a>
+                </li>
+            </ul>
+        }*@
+
+

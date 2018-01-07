@@ -1,0 +1,35 @@
+﻿@model KillTheTest.Models.Lesson
+@using KillTheTest.Helpers;
+    
+
+    @{
+        ViewBag.Title = Model.ObjectiveName + " - " + Model.LessonName;
+        Layout = "~/Views/Shared/_Layout.cshtml";
+        
+    }
+
+
+<style type="text/css">
+
+    @@media (min-width: 768px){
+    body {
+    background-color:lightgray;
+    }
+}
+
+
+</style>
+
+    <div class="col-md-8 col-md-offset-2 lessoncontainer">
+    <div class="page-header">
+        <h1>@Html.Raw(Helpers.ConvertHtml(Model.ObjectiveName))</h1>
+        <h4 class="lessonDescription"><em>@Model.LessonName</em></h4>
+    </div>
+
+        @Html.Partial("Lesson", Model)
+        @Html.Partial("LessonProgressBar", Model)
+
+
+</div>
+
+
